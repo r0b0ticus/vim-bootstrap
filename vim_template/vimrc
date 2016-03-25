@@ -1,24 +1,16 @@
 "*****************************************************************************
-"" NeoBundle core
+"" Plug core
 "*****************************************************************************
-if has('vim_starting')
-  set nocompatible               " Be iMproved
-
-  " Required:
-  set runtimepath+={{editor.basedir}}/bundle/neobundle.vim/
-endif
-
-let neobundle_readme=expand('{{editor.basedir}}/bundle/neobundle.vim/README.md')
+"
+let vimplug_file=expand('{{editor.basedir}}/autoload/plug.vim')
 
 let g:vim_bootstrap_langs = "{{ select_lang }}"
 let g:vim_bootstrap_editor = "{{editor.name}}"				" nvim or vim
 
-if !filereadable(neobundle_readme)
-  echo "Installing NeoBundle..."
+if !filereadable(vimplug_file)
+  echo "Installing vim-plug"
   echo ""
-  silent !mkdir -p {{editor.basedir}}/bundle
-  silent !git clone https://github.com/Shougo/neobundle.vim {{editor.basedir}}/bundle/neobundle.vim/
-  let g:not_finsh_neobundle = "yes"
+  silent !\curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 
   " Run shell script if exist on custom select language
   {%- for b in bundle %}
@@ -29,31 +21,27 @@ if !filereadable(neobundle_readme)
 endif
 
 " Required:
-call neobundle#begin(expand('{{editor.basedir}}/bundle/'))
-
-" Let NeoBundle manage NeoBundle
-" Required:
-NeoBundleFetch 'Shougo/neobundle.vim'
+call plug#begin('~/.vim/plugged')
 
 "*****************************************************************************
-"" NeoBundle install packages
+"" Vim Plug install packages
 "*****************************************************************************
-NeoBundle 'scrooloose/nerdtree'
-NeoBundle 'jistr/vim-nerdtree-tabs.git'
-NeoBundle 'tpope/vim-commentary'
-NeoBundle 'tpope/vim-fugitive'
-NeoBundle 'ctrlpvim/ctrlp.vim'
-NeoBundle 'vim-airline/vim-airline'
-NeoBundle 'vim-airline/vim-airline-themes'
-NeoBundle 'airblade/vim-gitgutter'
-NeoBundle 'sheerun/vim-polyglot'
-NeoBundle 'vim-scripts/grep.vim'
-NeoBundle 'vim-scripts/CSApprox'
-NeoBundle 'bronson/vim-trailing-whitespace'
-NeoBundle 'jiangmiao/auto-pairs'
-NeoBundle 'majutsushi/tagbar'
-NeoBundle 'scrooloose/syntastic'
-NeoBundle 'Shougo/vimproc.vim', {
+Plug 'scrooloose/nerdtree'
+Plug 'jistr/vim-nerdtree-tabs.git'
+Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-fugitive'
+Plug 'ctrlpvim/ctrlp.vim'
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+Plug 'airblade/vim-gitgutter'
+Plug 'sheerun/vim-polyglot'
+Plug 'vim-scripts/grep.vim'
+Plug 'vim-scripts/CSApprox'
+Plug 'bronson/vim-trailing-whitespace'
+Plug 'jiangmiao/auto-pairs'
+Plug 'majutsushi/tagbar'
+Plug 'scrooloose/syntastic'
+Plug 'Shougo/vimproc.vim', {
       \ 'build' : {
       \     'windows' : 'tools\\update-dll-mingw',
       \     'cygwin' : 'make -f make_cygwin.mak',
@@ -63,26 +51,26 @@ NeoBundle 'Shougo/vimproc.vim', {
       \ }
 
 "" Vim-Session
-NeoBundle 'xolox/vim-misc'
-NeoBundle 'xolox/vim-session'
+Plug 'xolox/vim-misc'
+Plug 'xolox/vim-session'
 
 if v:version >= 703
-  NeoBundle 'Shougo/vimshell.vim'
+  Plug 'Shougo/vimshell.vim'
 endif
 
 if v:version >= 704
   "" Snippets
-  NeoBundle 'SirVer/ultisnips'
-  NeoBundle 'FelikZ/ctrlp-py-matcher'
+  Plug 'SirVer/ultisnips'
+  Plug 'FelikZ/ctrlp-py-matcher'
 endif
 
-NeoBundle 'honza/vim-snippets'
+Plug 'honza/vim-snippets'
 
 "" Color
-NeoBundle 'tomasr/molokai'
+Plug 'tomasr/molokai'
 
 "" Vim-Bootstrap Updater by sherzberg
-NeoBundle 'avelino/vim-bootstrap-updater'
+Plug 'avelino/vim-bootstrap-updater'
 
 "" Custom bundles
 {% for b in bundle -%}
@@ -95,13 +83,10 @@ if filereadable(expand("{{editor.localbundlerc}}"))
 endif
 
 call neobundle#end()
+call plug#end()
 
 " Required:
 filetype plugin indent on
-
-" If there are uninstalled bundles found on startup,
-" this will conveniently prompt you to install them.
-NeoBundleCheck
 
 "*****************************************************************************
 "" Basic Setup
